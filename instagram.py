@@ -71,8 +71,7 @@ def authorized():
             resp
         )
     session[token_name] = (resp['access_token'], '')
-    me = insta_get('users/self/media/recent/')
-    return jsonify(me)
+    return redirect('/')
 
 
 @instagram.tokengetter
