@@ -2,6 +2,8 @@ import urllib
 
 from flask import Blueprint, redirect, url_for, current_app, session, jsonify, request
 from flask_oauthlib.client import OAuth
+import config
+
 
 instagram_bp = Blueprint('instagram', __name__,
                          template_folder='templates/instagram')
@@ -10,8 +12,8 @@ oauth = OAuth(current_app)
 
 instagram = oauth.remote_app(
     'instagram',
-    consumer_key='cbd39f1ce5f54a00b68e8581753bf614',
-    consumer_secret='79645a585f8940ffbd806759e1122140',
+    consumer_key=config.INSTAGRAM_KEY,
+    consumer_secret=config.INSTAGRAM_SECRET,
     request_token_params={'scope': 'basic'},
     base_url='https://api.instagram.com/v1/',
     request_token_url=None,

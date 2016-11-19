@@ -1,10 +1,10 @@
 import sentiment
 from flask import Flask, jsonify
 from instagram import instagram_bp, authenticate, insta_get
+import config
 
 app = Flask(__name__)
-app.debug = True
-app.secret_key = 'development'
+app.config.from_object(config)
 app.register_blueprint(instagram_bp)
 
 
