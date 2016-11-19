@@ -26,7 +26,7 @@ token_name = 'instagram_token'
 
 
 def redirect_dummy(*args, **kwargs):
-    return redirect(url_for('login'))
+    return redirect(url_for('instagram.login'))
 
 
 def authenticate(f):
@@ -52,13 +52,13 @@ def insta_get(url, params=None):
 
 @instagram_bp.route('/login')
 def login():
-    return instagram.authorize(callback=url_for('authorized', _external=True))
+    return instagram.authorize(callback=url_for('instagram.authorized', _external=True))
 
 
 @instagram_bp.route('/logout')
 def logout():
     session.pop(token_name, None)
-    return redirect(url_for('index'))
+    return redirect('/')
 
 
 @instagram_bp.route('/login/authorized')
@@ -72,7 +72,7 @@ def authorized():
         )
     session[token_name] = (resp['access_token'], '')
     me = insta_get('users/self/media/recent/')
-    return jsonify(me.data)
+    return jsonify(me)
 
 
 @instagram.tokengetter

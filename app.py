@@ -1,17 +1,17 @@
+import config
 import sentiment
 from flask import Flask, jsonify
 from instagram import instagram_bp, authenticate, insta_get
-import config
 
 app = Flask(__name__)
 app.config.from_object(config)
-app.register_blueprint(instagram_bp)
 
 
+@app.route('/')
 @authenticate
-@app.route('/photos/urls')
 def index():
-    return jsonify(get_recent_urls())
+    urls = get_recent_urls()
+    return jsonify(urls)
 
 
 def get_recent_urls():
@@ -27,5 +27,14 @@ def sentimentAnalisis():
     return jsonify(json)
 
 
+@authenticate
+@app.route('/photos/sentiments')
+def photo_sentiments():
+    urls = get_recent_urls()
+    results = sentiment.analyze_multiple(urls)
+    return jsonify(results)
+
+
+app.register_blueprint(instagram_bp)
 if __name__ == '__main__':
     app.run()
