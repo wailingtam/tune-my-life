@@ -1,12 +1,11 @@
 import config
 import sentiment
 from flask import Flask, jsonify, session, render_template
-from instagram import instagram_bp, authenticate, insta_get
+from instagram import instagram_bp, authenticate, insta_get, user_data
 import spotify
 
 app = Flask(__name__)
 app.config.from_object(config)
-user_name = 'username'
 
 
 # In order to login redirect user to view instagram.login
@@ -14,8 +13,8 @@ user_name = 'username'
 
 @app.route('/')
 def index():
-    user = session.get(user_name)
-    return user
+    user = session.get(user_data)
+    return jsonify(user) or 'NO USER'
 
 
 def get_recent_urls():
@@ -24,12 +23,21 @@ def get_recent_urls():
     return urls
 
 
+def average_feelings(sublist):
+    # for item in sublist:
+    #     if 'score' in item:
+    #
+    # map(lambda x: x['score'])
+    pass
+
 @authenticate
 @app.route('/photos/sentiments')
 def photo_sentiments():
     urls = get_recent_urls()
-    results = sentiment.analyze_multiple(urls)
-    return jsonify(results)
+    photos = sentiment.analyze_multiple(urls)
+    faces = [average_feelings(sublist) for sublist in photos]
+    songs = spotify.get
+    return jsonify(faces)
 
 
 app.register_blueprint(instagram_bp)

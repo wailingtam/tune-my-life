@@ -1,9 +1,8 @@
 import urllib
 
-from flask import Blueprint, redirect, url_for, current_app, session, jsonify, request
-from flask_oauthlib.client import OAuth
 import config
-
+from flask import Blueprint, redirect, url_for, current_app, session, request, jsonify
+from flask_oauthlib.client import OAuth
 
 instagram_bp = Blueprint('instagram', __name__,
                          template_folder='templates/instagram')
@@ -23,7 +22,7 @@ instagram = oauth.remote_app(
 )
 
 token_name = 'instagram_token'
-
+user_data = 'user_self'
 
 def redirect_dummy(*args, **kwargs):
     return redirect(url_for('instagram.login'))
@@ -44,7 +43,7 @@ def insta_get(url, params=None):
     token = get_github_oauth_token()[0] or ''
     params_s = urllib.urlencode(params)
 
-    return instagram.get(url + '?access_token=' + token +'&'+ params_s).data
+    return instagram.get(url + '?access_token=' + token + '&' + params_s).data
 
 
 # Session management views
@@ -70,7 +69,11 @@ def authorized():
             request.args['error_description'],
             resp
         )
+
     session[token_name] = (resp['access_token'], '')
+    session[user_data] = resp['user']
+    me = resp['user']
+    print(me)
     return redirect('/')
 
 
