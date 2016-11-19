@@ -28,6 +28,15 @@ def get_recent_urls():
     urls = [photo['images']['standard_resolution']['url'] for photo in photos['data']]
     return urls
 
+def get_recent_photos():
+    photos = insta_get('users/self/media/recent/', params={'COUNT': 50})
+    urls = [{
+                'url':photo['images']['standard_resolution']['url'],
+                'caption': photo['images']['caption']['text']
+            }
+            for photo in photos['data']]
+    return urls
+
 
 def average_feelings(sublist):
     if not sublist:
