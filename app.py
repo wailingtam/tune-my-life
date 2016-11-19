@@ -20,7 +20,7 @@ def index():
     else:
         images = [{'caption': 'Amasd', 'url':'http://i.imgur.com/uL6IFOW.jpg'}, {'caption': 'asda', 'url': 'http://i.imgur.com/W5YdAgM.jpg'}]
 
-    return render_template('index.html', images=images)
+    return render_template('index.html', images=images, logged_in=user is not None)
 
 
 def get_recent_urls():

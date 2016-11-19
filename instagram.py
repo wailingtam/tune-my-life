@@ -57,6 +57,7 @@ def login():
 @instagram_bp.route('/logout')
 def logout():
     session.pop(token_name, None)
+    session.pop(user_data, None)
     return redirect('/')
 
 
