@@ -14,7 +14,13 @@ app.config.from_object(config)
 @app.route('/')
 def index():
     user = session.get(user_data)
-    return jsonify(user) or 'NO USER'
+
+    if user:
+        imageurls = get_recent_urls()
+    else:
+        imageurls = ['http://i.imgur.com/uL6IFOW.jpg', 'http://i.imgur.com/W5YdAgM.jpg']
+
+    return render_template('index.html', imageurls=imageurls)
 
 
 def get_recent_urls():
@@ -48,7 +54,7 @@ def get_playlist():
     return render_template("index.html")
 
 
-@app.route('/')
+@app.route('/home')
 def home():
     imageurls = ['http://i.imgur.com/uL6IFOW.jpg', 'http://i.imgur.com/W5YdAgM.jpg']
     return render_template('index.html', imageurls=imageurls)
