@@ -16,11 +16,11 @@ def index():
     user = session.get(user_data)
 
     if user:
-        imageurls = get_recent_urls()
+        images = get_recent_photos()
     else:
-        imageurls = ['http://i.imgur.com/uL6IFOW.jpg', 'http://i.imgur.com/W5YdAgM.jpg']
+        images = [{'caption': 'Amasd', 'url':'http://i.imgur.com/uL6IFOW.jpg'}, {'caption': 'asda', 'url': 'http://i.imgur.com/W5YdAgM.jpg'}]
 
-    return render_template('index.html', imageurls=imageurls)
+    return render_template('index.html', images=images)
 
 
 def get_recent_urls():
@@ -32,7 +32,7 @@ def get_recent_photos():
     photos = insta_get('users/self/media/recent/', params={'COUNT': 50})
     urls = [{
                 'url':photo['images']['standard_resolution']['url'],
-                'caption': photo['caption']['text']
+                'caption': photo['caption']['text'] if photo['caption'] else ' '
             }
             for photo in photos['data']]
     return urls
@@ -81,7 +81,7 @@ def get_playlist():
 @app.route('/home')
 def home():
     imageurls = ['http://i.imgur.com/uL6IFOW.jpg', 'http://i.imgur.com/W5YdAgM.jpg']
-    return render_template('index.html', imageurls=imageurls)
+    return render_template('index.html', images=images)
 
 
 if __name__ == '__main__':

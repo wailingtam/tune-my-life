@@ -28,10 +28,10 @@
 
                 <!-- Main -->
                 <div id="main">
-                    {% for imageurl in imageurls %}
+                    {% for image in images %}
                         <article class="thumb">
-                            <a href="{{imageurl}}" class="image"><img src={{imageurl}} alt="" /></a>
-                            <h2>Magna feugiat lorem</h2>
+                            <a href="{{image['url']}}" class="image"><img src={{image['url']}} alt="" /></a>
+                            <h2>{{image['caption']}}</h2>
                             <p>Nunc blandit nisi ligula magna sodales lectus elementum non. Integer id venenatis velit.</p>
                         </article>
                     {% endfor %}
