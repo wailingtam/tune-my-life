@@ -18,6 +18,9 @@
 				<!-- Header -->
 					<header id="header">
 						<h1><a href="index.html"><strong>Tune My Life</strong> a project born at Oxford Hack</a></h1>
+                        {% if not logged_in %}
+                            <a href="/login">LOGIN</a>
+                        {% endif %}
 						<nav>
 							<ul>
 								<li><a href="#footer" class="icon fa-info-circle">About</a></li>

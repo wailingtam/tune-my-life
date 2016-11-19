@@ -15,12 +15,13 @@ app.config.from_object(config)
 def index():
     user = session.get(user_data)
 
-    if user:
-        images = get_recent_photos()
+    if user is None:
+        images = [{'caption': 'Amasd', 'url': 'http://i.imgur.com/uL6IFOW.jpg'},
+                  {'caption': 'asda', 'url': 'http://i.imgur.com/W5YdAgM.jpg'}]
     else:
-        images = [{'caption': 'Amasd', 'url':'http://i.imgur.com/uL6IFOW.jpg'}, {'caption': 'asda', 'url': 'http://i.imgur.com/W5YdAgM.jpg'}]
+        images = get_recent_photos()
 
-    return render_template('index.html', images=images, logged_in=user is not None)
+    return render_template('index.html', images=images, logged_in=(user is not None))
 
 
 def get_recent_urls():
@@ -28,10 +29,11 @@ def get_recent_urls():
     urls = [photo['images']['standard_resolution']['url'] for photo in photos['data']]
     return urls
 
+
 def get_recent_photos():
     photos = insta_get('users/self/media/recent/', params={'COUNT': 50})
     urls = [{
-                'url':photo['images']['standard_resolution']['url'],
+                'url': photo['images']['standard_resolution']['url'],
                 'caption': photo['caption']['text'] if photo['caption'] else ' '
             }
             for photo in photos['data']]
