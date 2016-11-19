@@ -1,3 +1,5 @@
+from flask import render_template
+
 import sentiment
 from flask import Flask, jsonify
 from instagram import instagram_bp, authenticate, insta_get
@@ -26,6 +28,11 @@ def sentimentAnalisis():
         'https://raw.githubusercontent.com/Microsoft/ProjectOxford-ClientSDK/master/Face/Windows/Data/detection3.jpg')
     return jsonify(json)
 
+
+@app.route('/')
+def home():
+    imageurls = ['http://i.imgur.com/uL6IFOW.jpg', 'http://i.imgur.com/W5YdAgM.jpg']
+    return render_template('index.html', imageurls=imageurls)
 
 if __name__ == '__main__':
     app.run()
