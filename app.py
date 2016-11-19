@@ -32,7 +32,7 @@ def get_recent_photos():
     photos = insta_get('users/self/media/recent/', params={'COUNT': 50})
     urls = [{
                 'url':photo['images']['standard_resolution']['url'],
-                'caption': photo['images']['caption']['text']
+                'caption': photo['caption']['text']
             }
             for photo in photos['data']]
     return urls
