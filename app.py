@@ -1,18 +1,21 @@
 import config
 import sentiment
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, session, render_template
 from instagram import instagram_bp, authenticate, insta_get
 import spotify
 
 app = Flask(__name__)
 app.config.from_object(config)
+user_name = 'username'
 
+
+# In order to login redirect user to view instagram.login
+# To logout same: instagram.logout
 
 @app.route('/')
-@authenticate
 def index():
-    urls = get_recent_urls()
-    return jsonify(urls)
+    user = session.get(user_name)
+    return user
 
 
 def get_recent_urls():
@@ -20,12 +23,6 @@ def get_recent_urls():
     urls = [photo['images']['standard_resolution']['url'] for photo in photos['data']]
     return urls
 
-
-@app.route('/analize')
-def sentimentAnalisis():
-    json = sentiment.analize(
-        'https://raw.githubusercontent.com/Microsoft/ProjectOxford-ClientSDK/master/Face/Windows/Data/detection3.jpg')
-    return jsonify(json)
 
 @authenticate
 @app.route('/photos/sentiments')
