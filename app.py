@@ -1,19 +1,21 @@
-from flask import render_template
-
-import sentiment
-from flask import Flask, jsonify
-from instagram import instagram_bp, authenticate, insta_get
 import config
+import sentiment
+from flask import Flask, jsonify, session, render_template
+from instagram import instagram_bp, authenticate, insta_get
+import spotify
 
 app = Flask(__name__)
 app.config.from_object(config)
-app.register_blueprint(instagram_bp)
+user_name = 'username'
 
 
-@authenticate
-@app.route('/photos/urls')
+# In order to login redirect user to view instagram.login
+# To logout same: instagram.logout
+
+@app.route('/')
 def index():
-    return jsonify(get_recent_urls())
+    user = session.get(user_name)
+    return user
 
 
 def get_recent_urls():
@@ -22,11 +24,20 @@ def get_recent_urls():
     return urls
 
 
-@app.route('/analize')
-def sentimentAnalisis():
-    json = sentiment.analize(
-        'https://raw.githubusercontent.com/Microsoft/ProjectOxford-ClientSDK/master/Face/Windows/Data/detection3.jpg')
-    return jsonify(json)
+@authenticate
+@app.route('/photos/sentiments')
+def photo_sentiments():
+    urls = get_recent_urls()
+    results = sentiment.analyze_multiple(urls)
+    return jsonify(results)
+
+
+app.register_blueprint(instagram_bp)
+
+@app.route('/get-playlist')
+def get_playlist():
+    spotify.get_recommendations()
+    return render_template("index.html")
 
 
 @app.route('/')

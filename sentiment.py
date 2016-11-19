@@ -1,7 +1,7 @@
 import requests
+import config
 
 _url = 'https://api.projectoxford.ai/emotion/v1.0/recognize'
-_key = 'd1b04792863949d493c06b8f2f32df9f'
 
 
 def processRequest(json, headers):
@@ -32,7 +32,7 @@ def processRequest(json, headers):
 
 def analize(imgUrl):
     headers = dict()
-    headers['Ocp-Apim-Subscription-Key'] = _key
+    headers['Ocp-Apim-Subscription-Key'] = config.SENTIMENT_IMAGE_KEY
     headers['Content-Type'] = 'application/json'
 
     json = {'url': imgUrl}
