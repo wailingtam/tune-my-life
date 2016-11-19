@@ -1,5 +1,6 @@
 from flask import Flask, redirect, url_for, session, request, jsonify
 from flask_oauthlib.client import OAuth
+import sentiment
 
 
 app = Flask(__name__)
@@ -56,6 +57,11 @@ def authorized():
 @instagram.tokengetter
 def get_github_oauth_token():
     return session.get('github_token')
+
+@app.route('/analize')
+def sentimentAnalisis():
+    json = sentiment.analize('https://raw.githubusercontent.com/Microsoft/ProjectOxford-ClientSDK/master/Face/Windows/Data/detection3.jpg')
+    return jsonify(json)
 
 
 if __name__ == '__main__':
