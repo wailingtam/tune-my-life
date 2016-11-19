@@ -1,7 +1,8 @@
 import config
 import sentiment
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 from instagram import instagram_bp, authenticate, insta_get
+import spotify
 
 app = Flask(__name__)
 app.config.from_object(config)
@@ -26,7 +27,6 @@ def sentimentAnalisis():
         'https://raw.githubusercontent.com/Microsoft/ProjectOxford-ClientSDK/master/Face/Windows/Data/detection3.jpg')
     return jsonify(json)
 
-
 @authenticate
 @app.route('/photos/sentiments')
 def photo_sentiments():
@@ -36,5 +36,12 @@ def photo_sentiments():
 
 
 app.register_blueprint(instagram_bp)
+
+@app.route('/get-playlist')
+def get_playlist():
+    spotify.get_recommendations()
+    return render_template("main.html")
+
+
 if __name__ == '__main__':
     app.run()
