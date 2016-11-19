@@ -4,13 +4,12 @@ _url = 'https://api.projectoxford.ai/emotion/v1.0/recognize'
 _key = 'd1b04792863949d493c06b8f2f32df9f'
 
 
-def processRequest( json, headers):
-
+def processRequest(json, headers):
     result = None
 
     while True:
 
-        response = requests.request( 'post', _url, json = json, headers = headers )
+        response = requests.request('post', _url, json=json, headers=headers)
 
         if response.status_code == 200 or response.status_code == 201:
 
@@ -23,21 +22,25 @@ def processRequest( json, headers):
                     result = response.content
 
         else:
-            print( "Error code: %d" % ( response.status_code ) )
-            print( "Message: %s" % ( response.json()['error']['message'] ) )
+            print("Error code: %d" % (response.status_code))
+            print("Message: %s" % (response.json()['error']['message']))
 
         break
 
     return result
 
-def analize (imgUrl):
+
+def analize(imgUrl):
     headers = dict()
     headers['Ocp-Apim-Subscription-Key'] = _key
     headers['Content-Type'] = 'application/json'
 
-    json = { 'url': imgUrl }
+    json = {'url': imgUrl}
 
     result = processRequest(json, headers)
 
     return result
 
+
+def analyze_multiple(imgs):
+    return [analize(img) for img in imgs]
