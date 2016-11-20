@@ -54,11 +54,7 @@ def login():
     return instagram.authorize(callback=url_for('instagram.authorized', _external=True))
 
 
-@instagram_bp.route('/logout')
-def logout():
-    session.pop(token_name, None)
-    session.pop(user_data, None)
-    return redirect('/')
+
 
 
 @instagram_bp.route('/login/authorized')
@@ -75,7 +71,7 @@ def authorized():
     session[user_data] = resp['user']
     me = resp['user']
     print(me)
-    return redirect('/')
+    return redirect(url_for('spotify.login'))
 
 
 @instagram.tokengetter
