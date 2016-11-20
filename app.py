@@ -1,6 +1,6 @@
 import config
 import sentiment
-import spotify
+from feelings import average_feelings
 from flask import Flask, jsonify, session, render_template
 from instagram import instagram_bp, authenticate, insta_get, user_data
 
@@ -40,28 +40,6 @@ def get_recent_photos():
     return urls
 
 
-def average_feelings(sublist):
-    if not sublist:
-        return None
-    t_score = {
-        'anger': 0,
-        'contempt': 0,
-        'disgust': 0,
-        'fear': 0,
-        'happiness': 0,
-        'neutral': 0,
-        'sadness': 0,
-        'surprise': 0,
-    }
-    for item in sublist:
-        if 'scores' in item:
-            for k, v in item['scores'].items():
-                t_score[k] += v
-    length = len(sublist)
-    f_score = map(lambda (k, v): (k, v / length), t_score.items())
-    return dict(f_score)
-
-
 @authenticate
 @app.route('/photos/sentiments')
 def photo_sentiments():
@@ -72,19 +50,6 @@ def photo_sentiments():
 
 
 app.register_blueprint(instagram_bp)
-
-
-@app.route('/get-playlist')
-def get_playlist():
-    spotify.get_recommendations()
-    return render_template("index.html")
-
-
-@app.route('/home')
-def home():
-    imageurls = ['http://i.imgur.com/uL6IFOW.jpg', 'http://i.imgur.com/W5YdAgM.jpg']
-    return render_template('index.html', images=images)
-
 
 if __name__ == '__main__':
     app.run()
