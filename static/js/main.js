@@ -295,5 +295,22 @@
 						});
 
 	});
+	var $startApp = $('#start_app');
+	$startApp.on('click',function(e){
+		$('#generate_panel').hide();
+		$('#loading_panel').show();
+
+		$.getJSON('/playlist')
+				.done(function(v){
+					$('#loading_panel').hide();
+					$('#playlist').show();
+					$('#playlist').find('a').attr('href',v['playlist_url']);
+				})
+	});
+
+	$('#loading_panel').hide();
+	$('#playlist').hide();
+
+
 
 })(jQuery);
