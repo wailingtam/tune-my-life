@@ -44,6 +44,9 @@ def callback():
     response_data = json.loads(post_request.text)
     access_token = response_data["access_token"]
     session[spotify_at] = access_token
+    sp = spotipy.Spotify(auth=access_token)
+    username = sp.current_user()['id']
+    session['spotify_user'] = username
     # refresh_token = response_data["refresh_token"]
     # token_type = response_data["token_type"]
     # expires_in = response_data["expires_in"]
@@ -55,7 +58,7 @@ def callback():
 def login():
     auth_query_parameters = {
         "response_type": "code",
-        "redirect_uri": url_for('spotify.callback',_external=True),
+        "redirect_uri": url_for('spotify.callback', _external=True),
         "scope": SCOPE,
         "client_id": config.SPOTIFY_CLIENT_ID
     }
@@ -64,8 +67,9 @@ def login():
     return redirect(auth_url)
 
 
-# def get_recommendations(sentiment_data):
-def get_recommendations(token):
+@spotify_bp.route('/spotify')
+def get_recommendations():
+    token = session[spotify_at]
     # attributes = get_track_attributes(sentiment_data)
     sp = spotipy.Spotify(auth=token)
     attributes = {
@@ -92,8 +96,8 @@ def create_playlist(token, tracks):
     dt = datetime.datetime.now()
     creation_time = dt.strftime('%m/%d/%Y %H:%M')
 
-    # TODO: Pass insta username
-    pl = sp.user_playlist_create("tune-my-life", "usn " + creation_time, public=True)
+    username = session.get('spotify_user', 'spotify')
+    pl = sp.user_playlist_create(username, "TuneMyLife - " + creation_time, public=True)
 
     # Get the tracks uris
     tracks_uris = []
@@ -101,6 +105,6 @@ def create_playlist(token, tracks):
         tracks_uris.append(tr['uri'])
 
     # Add tracks to the new playlist
-    snapshot_id = sp.user_playlist_add_tracks("tune-my-life", pl['id'], tracks_uris)
+    snapshot_id = sp.user_playlist_add_tracks(username, pl['id'], tracks_uris)
 
     return pl['external_urls']['spotify']
