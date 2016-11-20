@@ -21,7 +21,7 @@ def index():
     else:
         images = get_recent_photos()
 
-    return render_template('index.html', images=images, logged_in=(user is not None))
+    return render_template('index.html', images=images, user=user)
 
 
 def get_recent_urls():
@@ -48,6 +48,11 @@ def photo_sentiments():
     faces = [average_feelings(sublist) for sublist in photos]
     return jsonify(faces)
 
+
+@authenticate
+@app.route('/playlist')
+def playlist():
+    return jsonify({'playlist_url':'http://gerard.space'})
 
 app.register_blueprint(instagram_bp)
 
