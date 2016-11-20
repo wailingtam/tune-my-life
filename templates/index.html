@@ -36,7 +36,7 @@
                 <div id="main">
                     {% for image in images %}
                         <article class="thumb">
-                            <a href="{{image['url']}}" class="image"><img src={{image['url']}} alt="" /></a>
+                            <a href="{{image['url']}}" class="image"><img src={{image['url']}} alt="" /><p class="img_caption"> {{ image['title'] }}</p></a>
                             <h2>{{image['caption']}}</h2>
                         </article>
                     {% endfor %}

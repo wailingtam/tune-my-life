@@ -1993,3 +1993,11 @@
 		#footer .copyright a {
 			color: inherit;
 		}
+
+		p.img_caption {
+			text-align: center;
+		    font-size: 4em;
+			font-weight: 700;
+			color: #e4fbff;
+			margin-top: 25%;
+		}

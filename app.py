@@ -18,8 +18,14 @@ def index():
     user = session.get(user_data)
 
     if user is None:
-        images = [{'caption': 'Amasd', 'url': 'http://i.imgur.com/uL6IFOW.jpg'},
-                  {'caption': 'asda', 'url': 'http://i.imgur.com/W5YdAgM.jpg'}]
+        images = [{'title':'', 'caption': '', 'url': 'https://images.pexels.com/photos/27411/pexels-photo-27411.jpg?w=1260&h=750&auto=compress&cs=tinysrgb'},
+                  {'title':'Do you', 'caption': '', 'url':'http://i.imgur.com/W5YdAgM.jpg'},
+                  {'title':'want to get', 'caption': '', 'url':'http://i.imgur.com/7AwG6iO.jpg'},
+                  {'title':'', 'caption': '', 'url':'http://how-old.net/Images/faces2/scroll005.jpg'},
+                  {'title':'the playlist', 'caption': '', 'url':'https://images.pexels.com/photos/798/bench-people-smartphone-sun.jpg?w=1260&h=750&auto=compress&cs=tinysrgb'},
+                  {'title':'of', 'caption': '', 'url':'https://images.pexels.com/photos/108048/pexels-photo-108048.jpeg?w=1260&h=750&auto=compress&cs=tinysrgb'},
+                  {'title':'your', 'caption': '', 'url':'http://i.imgur.com/AmsU4OV.jpg'},
+                  {'title':'life?', 'caption': '', 'url':'https://images.pexels.com/photos/5929/food-salad-dinner-eating.jpg?w=1260&h=750&auto=compress&cs=tinysrgb'}]
     else:
         images = get_recent_photos()
 
@@ -36,7 +42,8 @@ def get_recent_photos():
     photos = insta_get('users/self/media/recent/', params={'COUNT': 50})
     urls = [{
                 'url': photo['images']['standard_resolution']['url'],
-                'caption': photo['caption']['text'] if photo['caption'] else ' '
+                'caption': photo['caption']['text'] if photo['caption'] else ' ',
+                'title': ''
             }
             for photo in photos['data']]
     return urls
