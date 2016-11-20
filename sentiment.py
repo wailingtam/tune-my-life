@@ -4,7 +4,7 @@ import config
 _url = 'https://api.projectoxford.ai/emotion/v1.0/recognize'
 
 
-def processRequest(json, headers):
+def process_request(json, headers):
     result = None
 
     while True:
@@ -37,7 +37,7 @@ def analize(imgUrl):
 
     json = {'url': imgUrl}
 
-    result = processRequest(json, headers)
+    result = process_request(json, headers)
 
     return result
 

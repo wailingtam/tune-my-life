@@ -68,26 +68,30 @@ def login():
 
 
 @spotify_bp.route('/spotify')
-def get_recommendations():
+def get_recommendations(sentiment_data):
     token = session[spotify_at]
-    # attributes = get_track_attributes(sentiment_data)
     sp = spotipy.Spotify(auth=token)
-    attributes = {
-        'target_acousticness': 0.9,
-        'target_danceability': 0,
-        'target_energy': 0.1,
-        'target_instrumentalness': 0.8,
-        'target_liveness': 0.8,
-        'target_loudness': 0.5,
-        'target_speechiness': 0.2,
-        'target_time_signature': 4,
-        'target_valence': 0.65
-    }
-    results = sp.recommendations(seed_artists=[], seed_genres=['chill', 'rock', 'electronic', 'classical', 'r-n-b'],
-                                 seed_tracks=[], limit=20, country=None, min_popularity=40)
 
-    playlist_url = create_playlist(token, results)
-    return playlist_url
+    dt = datetime.datetime.now()
+    creation_time = dt.strftime('%m/%d/%Y %H:%M')
+
+    username = session.get('spotify_user', 'spotify')
+    pl = sp.user_playlist_create(username, "TuneMyLife - " + creation_time, public=True)
+
+    tracks_uris = []
+    for pic_sentiment in sentiment_data:
+
+        tracks = sp.recommendations(seed_artists=[], seed_genres=['chill', 'rock', 'electronic', 'classical', 'r-n-b'],
+                                    seed_tracks=[], limit=3, country=None, min_popularity=40, **pic_sentiment)
+
+        # Get the tracks uris
+        for tr in tracks['tracks']:
+            tracks_uris.append(tr['uri'])
+
+    # Add tracks to the new playlist
+    snapshot_id = sp.user_playlist_add_tracks(username, pl['id'], tracks_uris)
+
+    return pl['external_urls']['spotify']
 
 
 def create_playlist(token, tracks):

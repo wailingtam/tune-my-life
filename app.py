@@ -9,11 +9,9 @@ from spotify import spotify_bp,spotify_at
 app = Flask(__name__)
 app.config.from_object(config)
 
-
-
-
 # In order to login redirect user to view instagram.login
 # To logout same: instagram.logout
+
 
 @app.route('/')
 def index():
@@ -50,6 +48,7 @@ def photo_sentiments():
     urls = get_recent_urls()
     photos = sentiment.analyze_multiple(urls)
     faces = [average_feelings(sublist) for sublist in photos]
+    playlist_url = spotify.get_recommendations(faces)
     return jsonify(faces)
 
 
@@ -61,6 +60,7 @@ def playlist():
 app.register_blueprint(instagram_bp)
 
 app.register_blueprint(spotify_bp)
+
 
 @app.route('/logout')
 def logout():
