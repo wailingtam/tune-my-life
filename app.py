@@ -2,7 +2,7 @@ import config
 from flask import Flask, jsonify, render_template, request, redirect, session
 import sentiment
 import spotify
-from feelings import average_feelings
+from feelings import average_feelings, to_music
 from flask import Flask, jsonify, session, render_template
 from instagram import instagram_bp, authenticate, insta_get, user_data, token_name
 from spotify import spotify_bp,spotify_at
@@ -43,17 +43,16 @@ def get_recent_photos():
 
 
 @authenticate
-@app.route('/photos/sentiments')
+@app.route('/playlist')
 def photo_sentiments():
     urls = get_recent_urls()
     photos = sentiment.analyze_multiple(urls)
-    faces = [average_feelings(sublist) for sublist in photos]
-    playlist_url = spotify.get_recommendations(faces)
-    return jsonify(faces)
+    inputs = [to_music(average_feelings(sublist)) for sublist in photos]
+    playlist_url = spotify.get_recommendations(inputs)
+    return jsonify({'playlist_url':playlist_url})
 
 
-@authenticate
-@app.route('/playlist')
+
 def playlist():
     return jsonify({'playlist_url':'http://gerard.space'})
 

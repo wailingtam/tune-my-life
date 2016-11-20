@@ -67,7 +67,6 @@ def login():
     return redirect(auth_url)
 
 
-@spotify_bp.route('/spotify')
 def get_recommendations(sentiment_data):
     token = session[spotify_at]
     sp = spotipy.Spotify(auth=token)
@@ -80,13 +79,13 @@ def get_recommendations(sentiment_data):
 
     tracks_uris = []
     for pic_sentiment in sentiment_data:
+        if pic_sentiment:
+            tracks = sp.recommendations(seed_artists=[], seed_genres=['chill', 'rock', 'electronic', 'classical', 'r-n-b'],
+                                        seed_tracks=[], limit=3, country=None, min_popularity=30, **pic_sentiment)
 
-        tracks = sp.recommendations(seed_artists=[], seed_genres=['chill', 'rock', 'electronic', 'classical', 'r-n-b'],
-                                    seed_tracks=[], limit=3, country=None, min_popularity=40, **pic_sentiment)
-
-        # Get the tracks uris
-        for tr in tracks['tracks']:
-            tracks_uris.append(tr['uri'])
+            # Get the tracks uris
+            for tr in tracks['tracks']:
+                tracks_uris.append(tr['uri'])
 
     # Add tracks to the new playlist
     snapshot_id = sp.user_playlist_add_tracks(username, pl['id'], tracks_uris)
