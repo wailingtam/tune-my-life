@@ -1,11 +1,15 @@
 import config
+from flask import Flask, jsonify, render_template, request, redirect, session
 import sentiment
+import spotify
 from feelings import average_feelings
 from flask import Flask, jsonify, session, render_template
-from instagram import instagram_bp, authenticate, insta_get, user_data
-
+from instagram import instagram_bp, authenticate, insta_get, user_data, token_name
+from spotify import spotify_bp,spotify_at
 app = Flask(__name__)
 app.config.from_object(config)
+
+
 
 
 # In order to login redirect user to view instagram.login
@@ -55,6 +59,16 @@ def playlist():
     return jsonify({'playlist_url':'http://gerard.space'})
 
 app.register_blueprint(instagram_bp)
+
+app.register_blueprint(spotify_bp)
+
+@app.route('/logout')
+def logout():
+    session.pop(token_name, None)
+    session.pop(user_data, None)
+    session.pop(spotify_at, None)
+    return redirect('/')
+
 
 if __name__ == '__main__':
     app.run()
