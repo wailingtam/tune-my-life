@@ -2,6 +2,7 @@ import base64
 import datetime
 import json
 import urllib
+import random
 
 import config
 import requests
@@ -81,11 +82,13 @@ def get_recommendations(sentiment_data):
     for pic_sentiment in sentiment_data:
         if pic_sentiment:
             tracks = sp.recommendations(seed_artists=[], seed_genres=['chill', 'rock', 'electronic', 'classical', 'r-n-b'],
-                                        seed_tracks=[], limit=3, country=None, min_popularity=30, **pic_sentiment)
+                                        seed_tracks=[], limit=10, country=None, **pic_sentiment)
+            if tracks:
+                songs = [random.choice(tracks['tracks']) for i in range(3)]
 
-            # Get the tracks uris
-            for tr in tracks['tracks']:
-                tracks_uris.append(tr['uri'])
+                # Get the tracks uris
+                for tr in songs:
+                    tracks_uris.append(tr['uri'])
 
     # Add tracks to the new playlist
     snapshot_id = sp.user_playlist_add_tracks(username, pl['id'], tracks_uris)
